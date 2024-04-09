@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CloClu | <%= post.title %></title>
+    
+    <!-- for Frontend CSS -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/css/bootstrap.min.css" integrity="sha384-xOolHFLEh07PJGoPkLv1IbcEPTNtaed2xpHsD9ESMhqIYd0nLMwNLD69Npy4HI+N" crossorigin="anonymous">
+    <link href="/main.css" rel="stylesheet">
+
+    <script>
+        //**** Request delete method with AJAX? just get API with fetch?
+        function delpost() {
+            fetch('/delpost/<%= post._id %>', { method: 'DELETE' })
+            .then((response) =>  {
+                if (response.status == 204) {
+                    //** 성공적으로 삭제 시 forum 페이지로 리다이렉트
+                    window.location.href = '/forum';
+                } else {
+                    //** 서버측 에러
+                    console.log("error: ", response.status);
+                }
+            })
+            .catch((err) => {
+                //** 네트워크 에러
+                console.log("error: ", err);
+            });
+        }
+    </script>
+</head>
+<body class="grey-bg">
+
+    <%- include('nav.ejs') %>
+
+    <div class="detail-bg">
+        <h4><%= post.title %></h4>
+        <p><%= post.content %></p>
+    </div>
+
+    <div class="detail-ft">
+        <button type="button" onclick="location.href = '/edit/<%= post._id %>'" class="btn btn-primary btn-edit">수정하기</button>
+        <button type="button" onclick="delpost()" class="btn btn-secondary btn-delete">삭제하기</button>
+    </div>
+  
+</body>
+</html>

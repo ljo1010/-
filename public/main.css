@@ -16,6 +16,7 @@ body {
 }
 /* ==================================== */
 
+
 /* ========== for forum page ========== */
 .grey-bg {
 	background: #eee;
@@ -40,7 +41,8 @@ body {
 }
 /* ==================================== */
 
-/* ========== for write page ========== */
+
+/* ========== for post page =========== */
 input,div {
 	box-sizing: border-box;
   }
@@ -63,5 +65,34 @@ input,div {
 	border : none;
 	background : lightgrey;
 	border-radius: 5px;
+  }
+  .btn-index {
+	margin-top: 5%;
+    display: flex;
+    justify-content: center;
+}
+
+/* ==================================== */
+
+/* ====== for forum detail page ======= */
+.detail-bg {
+	background: white;
+	padding: 15px;
+	margin-top: 10px;
+}
+
+.detail-ft {
+	text-align: right;
+	padding: 15px;
+}
+
+.detail-ft > .btn {
+	font-weight: bold;
+	font-size: small;
+}
+
+.btn-edit {
+	background-color: blueviolet;
+	border-color: aliceblue;
 }
 /* ==================================== */
