@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CloClu | 회원가입</title>
+    <link href="/main.css" rel="stylesheet">
+</head>
+<body class="grey-bg">
+
+    <%- include('nav.ejs') %>
+
+    <form class="form-box" action="/register" method="POST">
+        <h4>가입</h4>
+        <span>아이디</span><input name="username" type="text">
+        <span>비밀번호</span><input name="password" type="password">
+        <span>비밀번호 확인</span><input name="password_check" type="password">
+        <button type="submit">회원가입</button>
+    </form>
+
+</body>
+</html>
