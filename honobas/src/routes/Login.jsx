@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from "react";
-import App from "../App";
-import { Routes, Route, Link, useNavigate, Outlet} from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 
 const User = {
     email: 'test1234@example.com',
@@ -40,6 +39,8 @@ function Login() {
     const onClickConfirmButton = () => {
         if (email === User.email && pw === User.pw) {
             alert('로그인에 성공했습니다.');
+            // 로그인 성공 시 다른 페이지로 이동
+            navigate('/main');
         } else {
             alert('등록되지 않은 회원입니다.');
         }
@@ -101,7 +102,8 @@ function Login() {
                 </button>
                 <button
                     className="bottomButton"
-                    onClick={()=> {navigate('/')}}>
+                    onClick={handleCloseButton}
+                >
                     닫기
                 </button>
             </div>

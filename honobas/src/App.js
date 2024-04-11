@@ -17,7 +17,7 @@ function App() {
       
       <Navbar bg="dark" variant="dark">
         <Container>
-        <Navbar.Brand href="#home">Influence</Navbar.Brand>
+        <Navbar.Brand href="#home">CroClo</Navbar.Brand>
         <Nav className="me-auto">
           <Nav.Link onClick={()=>navigate('/')}>메인</Nav.Link>
           <Nav.Link onClick={()=>{navigate('/Write')}}>글쓰기</Nav.Link>  
@@ -35,8 +35,7 @@ function App() {
     <Route path='/Write' element={<Write />} />
     <Route path='/Login' element={<Login />} />
   </Routes>
-
-
+  
     </div>
   );
 }
