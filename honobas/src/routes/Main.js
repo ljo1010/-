@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { NavLink, useParams } from "react-router-dom";
 
-function Write(props) {
+function Main(props) {
   let [modal, setModal] = useState(false);
   let [글제목, 글제목변경] = useState([]);
   let [따봉, 따봉변경] = useState([]);
@@ -58,4 +58,4 @@ function Modal(props) {
   );
 }
 
-export default Write;
+export default Main;
