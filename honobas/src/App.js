@@ -3,8 +3,8 @@ import './App.css';
 import { useState } from 'react';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import { Routes, Route, Link, useNavigate, Outlet} from 'react-router-dom';
-import {Write} from './routes/Write';
 import {Graph} from './routes/Grapg';
+import Write from './routes/Write';
 import Login from './routes/Login.jsx';
 
 
