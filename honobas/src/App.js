@@ -3,7 +3,6 @@ import './App.css';
 import { useState } from 'react';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import { Routes, Route, Link, useNavigate, Outlet} from 'react-router-dom';
-import {Graph} from './routes/Grapg';
 import Main from  './routes/Main.js'
 import Write from './routes/Write';
 import Login from './routes/Login.jsx';
@@ -21,8 +20,7 @@ function App() {
         <Navbar.Brand href="#home">Influence</Navbar.Brand>
         <Nav className="me-auto">
           <Nav.Link onClick={()=>navigate('/')}>메인</Nav.Link>
-          <Nav.Link onClick={()=>{navigate('/Write')}}>글쓰기</Nav.Link> 
-          <Nav.Link onClick={()=>{navigate('/Graph')}}>그래프</Nav.Link> 
+          <Nav.Link onClick={()=>{navigate('/Write')}}>글쓰기</Nav.Link>  
         </Nav>
         <Nav>
             <Nav.Link onClick={()=>{navigate('/Login')}}>
@@ -33,7 +31,7 @@ function App() {
       </Navbar>
 
       <Routes>
-    <Route path='/' element={<Main />} />
+    <Route path='/' element={<Main />} />ㅞㅡ
     <Route path='/Write' element={<Write />} />
     <Route path='/Login' element={<Login />} />
   </Routes>

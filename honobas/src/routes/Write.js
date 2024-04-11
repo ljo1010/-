@@ -4,9 +4,20 @@ import { NavLink, useParams } from "react-router-dom";
 function Write(props) {
   let [modal, setModal] = useState(false);
   let [글제목, 글제목변경] = useState([]);
-  let [따봉, 따봉변경] = useState([]);
+  let [따봉, 따봉변경] = useState([]); // 따봉 상태를 글제목과 같은 길이의 배열로 초기화
+
   let [title, setTitle] = useState(2);
   let [입력값, 입력값변경] = useState('');
+
+  // 글 추가 함수
+  const addPost = (title) => {
+    let copyTitles = [...글제목];
+    let copyLikes = [...따봉]; // 추천수 상태도 같은 길이로 복사
+    copyTitles.unshift(title);
+    copyLikes.unshift(0); // 새로운 글의 추천수를 0으로 초기화
+    글제목변경(copyTitles);
+    따봉변경(copyLikes);
+  };
 
   return (
     <>
@@ -29,16 +40,9 @@ function Write(props) {
           })}
           <input onChange={(e) => { 입력값변경(e.target.value); console.log(입력값) }} />
           <button onClick={() => {
-            let copy = [...글제목];
-            copy.unshift(입력값);
-            글제목변경(copy)
+            addPost(입력값); // 새로운 글 추가 시 추천수 0으로 초기화
           }}>업로드</button>
-          {/* 이게 이제 컴포넌트 문법 그리고 여기서는 html부분이기 떄문에 if문 
-          사용 못한다. 삼향 연산자를 쓰도록 하자. return 값이 있는 조건문이기 떄문이다.*/}
-          {
-            // props 전송은 부모로 전송 못하고 옆 집으로도 전송 못한다. 패륜 ntr 불가능
-            modal == true ? <Modal title={title} 글제목={글제목} /> : null
-          }
+          {modal && <Modal title={title} 글제목={글제목} />} {/* modal 상태가 true이면 Modal 컴포넌트 렌더링 */}
         </div>
       </div>
     </>
