@@ -46,7 +46,7 @@ function Main(props) {
   return (
     <>
       {/* Canvas 엘리먼트 추가 */}
-      <div>
+      <div style={{width: "500px", height: "500px"}}>
         <canvas ref={chartRef} id="myChart"></canvas>
       </div>
     </>
