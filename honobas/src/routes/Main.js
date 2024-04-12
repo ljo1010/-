@@ -19,11 +19,11 @@ function Main(props) {
     myChart = new Chart(ctx, {
       type: 'bar',
       data: {
-        labels: ['Red', 'Blue', 'Yellow', 'Green', 'Purple', 'Orange'],
+        labels: ['박태훈1', '박태훈2', '박태훈3', '박태훈4', '박태훈5', '박태훈6'],
         datasets: [{
-          label: '# of Votes',
+          label: '후노바스가 이번 선거에 투표한 사람번호',
           data: [12, 19, 3, 5, 2, 3],
-          borderWidth: 1
+          borderWidth: 0.5
         }]
       },
       options: {

@@ -136,3 +136,7 @@
 .navbar-brand {
   font-family: 'Oswald', sans-serif;
 }
+
+.login-link {
+  margin-left: auto; /* 로그인 링크를 오른쪽으로 이동 */
+}

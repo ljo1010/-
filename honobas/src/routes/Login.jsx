@@ -39,7 +39,7 @@ function Login() {
     const onClickConfirmButton = () => {
         if (email === User.email && pw === User.pw) {
             alert('로그인에 성공했습니다.');
-            // 로그인 성공 시 다른 페이지로 이동
+            // 로그인 성공 시 Main 화면으로 이동
             navigate('/main');
         } else {
             alert('등록되지 않은 회원입니다.');
@@ -47,8 +47,8 @@ function Login() {
     }
 
     const handleCloseButton = () => {
-        // 닫기 버튼을 눌렀을 때 수행할 작업을 여기에 추가
-        console.log('닫기 버튼을 눌렀습니다.');
+        // 닫기 버튼을 눌렀을 때 Main 화면으로 이동
+        navigate('/main');
     }
 
     return (
