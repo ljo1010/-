@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CloClu | 글 수정</title>
+    <link href="/main.css" rel="stylesheet">
+</head>
+<body class="grey-bg">
+
+    <%- include('nav.ejs') %>
+
+    <form class="form-box" action="/api/editpost?_method=PUT" method="POST">
+        <h4>수정하기</h4>
+        <input name="postID" value="<%= post._id %>" style="display: none;"></p>
+        <input name="title" type="text" value="<%= post.title %>">
+        <input name="content" type="text" value="<%= post.content %>">
+        <button type="submit">등록</button>
+    </form>
+
+</body>
+</html>

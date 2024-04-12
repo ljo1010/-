@@ -1,0 +1,142 @@
+.App {
+  text-align: center;
+}
+
+.App-logo {
+  height: 40vmin;
+  pointer-events: none;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .App-logo {
+    animation: App-logo-spin infinite 20s linear;
+  }
+}
+
+.App-header {
+  background-color: #282c34;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  font-size: calc(10px + 2vmin);
+  color: white;
+}
+
+.App-link {
+  color: #61dafb;
+}
+
+@keyframes App-logo-spin {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+.page{
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  width: 100%;
+  max-width: 500px;
+  padding: 0 20px;
+
+  left: 50%;
+  transform: translate(-50%, 0);
+
+  background-color: #F7F7F7;
+
+  overflow: hidden;
+
+  display: flex;
+  flex-direction: column;
+}
+
+.titleWrap{
+  margin-top: 87px;
+  font-size: 26px;
+  font-weight: 700;
+  color: #262626;
+}
+
+.contentWrap{
+  margin-top: 26px;
+  flex: 1;
+}
+
+.inputTitle{
+  font-size: 12px;
+  font-weight: 600;
+  color: #262626;
+}
+
+.inputWrap{
+  display: flex;
+  border-radius: 8px;
+  padding: 16px;
+  margin-top: 8px;
+  background-color: white;
+  border: 1px solid #e2e0e0;
+}
+
+.inputWrap:focus-within{
+  border: 1px solid #9e30f4;
+}
+
+.input{
+  width: 100;
+  outline: none;
+  border: none;
+  height: 17px;
+  font-size: 14px;
+  font-weight: 400;
+}
+
+.input::placeholder{
+  color: #dadada;
+}
+
+.errorMessageWrap{
+  margin-top: 8px;
+  color:#ef0000;
+  font-size: 12px;
+}
+
+.bottomButton{
+  width: 100%;
+  height: 48px;
+  border: none;
+  font-weight: 700;
+  background-color: #9e30f4;
+  border-radius: 64px;
+  color: white;
+  margin-bottom: 16px;
+  cursor: pointer;
+}
+
+.bottomButton:disabled{
+  background-color: #dadada;
+  color:white;
+}
+.main-bg{
+  background-color: #9e30f4;
+  background-position: center;
+}
+.modal {
+  margin-top: 20px;
+  padding: 20px;
+  background: #eee;
+  text-align: left;
+}
+
+.navbar-brand {
+  font-family: 'Oswald', sans-serif;
+}
+
+.login-link {
+  margin-left: auto; /* 로그인 링크를 오른쪽으로 이동 */
+}
