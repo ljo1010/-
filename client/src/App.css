@@ -140,3 +140,16 @@
 .login-link {
   margin-left: auto; /* 로그인 링크를 오른쪽으로 이동 */
 }
+.bottomButton {
+  background-color: #007bff;
+  color: #fff;
+  padding: 10px 20px;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.bottomButton:hover {
+  background-color: #0056b3;
+}

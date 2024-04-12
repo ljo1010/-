@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { useNavigate } from 'react-router-dom';
 import axios from "axios";
+import resister from "resister";
 
 const User = {
     email: 'test1234@example.com',
@@ -90,6 +91,13 @@ function Login() {
                 </div>
             </div>
             <div>
+            <button 
+                
+                    className="bottomButton"
+                    onClick={onClickConfirmButton}
+                >
+                    회원가입
+                </button>
                 <button 
                     disabled={buttonDisabled} 
                     className="bottomButton"
