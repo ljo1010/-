@@ -1,53 +1,109 @@
-import React, { useRef, useEffect } from "react";
-import Chart from 'chart.js/auto';
+import React, { useState } from "react";
+import { NavLink, useParams } from "react-router-dom";
 
 function Write(props) {
-  const chartRef = useRef(null); // Canvas 엘리먼트에 대한 참조를 얻기 위한 useRef 훅 사용
+  let [modal, setModal] = useState(false);
+  let [글제목, 글제목변경] = useState([]);
+  let [글내용, 글내용변경] = useState([]);
+  let [따봉, 따봉변경] = useState([]);
 
-  useEffect(() => {
-    let myChart = null; // 차트 인스턴스를 저장할 변수
+  let [titleIndex, setTitleIndex] = useState(null);
+  let [입력값, 입력값변경] = useState('');
+  let [내용입력값, 내용입력값변경] = useState('');
 
-    // 차트 생성 및 렌더링
-    const ctx = chartRef.current.getContext('2d');
+  const addPost = (title, content) => {
+    let copyTitles = [...글제목];
+    let copyContent = [...글내용];
+    let copyLikes = [...따봉];
+    copyTitles.unshift(title);
+    copyContent.unshift(content);
+    copyLikes.unshift(0);
+    글제목변경(copyTitles);
+    글내용변경(copyContent);
+    따봉변경(copyLikes);
+  };
 
-    // 이전 차트가 존재하는 경우 제거
-    if (myChart) {
-      myChart.destroy();
-    }
+  // 현재 날짜와 시간을 표시하는 함수
+  const getCurrentDateTime = () => {
+    const now = new Date();
+    const year = now.getFullYear();
+    const month = now.getMonth() + 1;
+    const day = now.getDate();
+    const hours = now.getHours();
+    const minutes = now.getMinutes();
+    return `${year}년 ${month}월 ${day}일 ${hours}시 ${minutes}분`;
+  };
 
-    // 새로운 차트 생성
-    myChart = new Chart(ctx, {
-      type: 'bar',
-      data: {
-        labels: ['박태훈1', '박태훈2', '박태훈3', '박태훈4', '박태훈5', '박태훈6'],
-        datasets: [{
-          label: '후노바스가 이번 선거에 투표한 사람번호',
-          data: [12, 19, 3, 5, 2, 3],
-          borderWidth: 0.5
-        }]
-      },
-      options: {
-        scales: {
-          y: {
-            beginAtZero: true
-          }
-        }
-      }
-    });
-
-    // 컴포넌트가 언마운트될 때 차트 제거
-    return () => {
-      if (myChart) {
-        myChart.destroy();
-      }
-    };
-  }, []); // 컴포넌트가 마운트될 때 한 번만 실행될 useEffect 사용
+  // 글 수정 함수
+  const editPost = (title, content, index) => {
+    let copyTitles = [...글제목];
+    let copyContent = [...글내용];
+    copyTitles[index] = title;
+    copyContent[index] = content;
+    글제목변경(copyTitles);
+    글내용변경(copyContent);
+  };
 
   return (
     <>
-      {/* Canvas 엘리먼트 추가 */}
-      <div>
-        <canvas ref={chartRef} id="myChart"></canvas>
+      <div className='main-bg'></div>
+      <div className='container'>
+        <div className='row'>
+          {글제목.map(function (a, i) {
+            return (
+              <div className="list" key={i}>
+                <h4 onClick={() => { setModal(true); setTitleIndex(i) }}>{글제목[i]}
+                  <span onClick={(e) => { e.stopPropagation(); let copy = [...따봉]; copy[i] = copy[i] + 1; 따봉변경(copy) }}>👍</span>{따봉[i]}
+                </h4>
+                <p>{글내용[i]}</p>
+                <p>{getCurrentDateTime()} 발행</p>
+                <button onClick={() => {
+                  let copyTitle = [...글제목];
+                  let copyContent = [...글내용];
+                  copyTitle.splice(i, 1);
+                  copyContent.splice(i, 1);
+                  글제목변경(copyTitle);
+                  글내용변경(copyContent);
+                }}>삭제</button>
+                <button onClick={() => {
+                  // 글 수정 모달 열기
+                  setModal(true);
+                  setTitleIndex(i);
+                }}>수정</button>
+              </div>)
+          })}
+          <input onChange={(e) => { 입력값변경(e.target.value); console.log(입력값) }} />
+          <textarea onChange={(e) => { 내용입력값변경(e.target.value); console.log(내용입력값) }} />
+          <button onClick={() => {
+            addPost(입력값, 내용입력값);
+          }}>
+            업로드</button>
+          {modal && <Modal title={글제목[titleIndex]} content={글내용[titleIndex]} setModal={setModal} editPost={editPost} index={titleIndex} />}
+        </div>
+      </div>
+    </>
+  );
+}
+
+function Modal(props) {
+  const [수정제목, set수정제목] = useState(props.title);
+  const [수정내용, set수정내용] = useState(props.content);
+
+  return (
+    <>
+      <div className='modal'>
+        <h4>{props.title}</h4>
+        <p>{props.content}</p>
+        <p>날짜</p>
+        <p>상세내용</p>
+        <input value={수정제목} onChange={(e) => set수정제목(e.target.value)} />
+        <textarea value={수정내용} onChange={(e) => set수정내용(e.target.value)} />
+        <button onClick={() => {
+          // 수정된 글 정보 전달
+          props.editPost(수정제목, 수정내용, props.index);
+          props.setModal(false);
+        }}>저장</button>
+        <button onClick={() => props.setModal(false)}>취소</button>
       </div>
     </>
   );
