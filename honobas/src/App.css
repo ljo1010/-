@@ -131,3 +131,7 @@
   background: #eee;
   text-align: left;
 }
+
+.navbar-brand {
+  font-family: 'Oswald', sans-serif;
+}
