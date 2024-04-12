@@ -12,11 +12,11 @@
     <script>
         //**** Request delete method with AJAX? just get API with fetch?
         function delpost() {
-            fetch('/api/delpost/<%= post._id %>', { method: 'DELETE' })
+            fetch('/delpost/<%= post._id %>', { method: 'DELETE' })
             .then((response) =>  {
                 if (response.status == 204) {
                     //** 성공적으로 삭제 시 forum 페이지로 리다이렉트
-                    window.location.href = '/api/forum/1';
+                    window.location.href = '/forum/1';
                 } else {
                     //** 서버측 에러
                     console.log("error: ", response.status);
@@ -39,7 +39,7 @@
     </div>
 
     <div class="detail-ft">
-        <button type="button" onclick="location.href = '/api/forum/edit/<%= post._id %>'" class="btn btn-primary btn-edit">수정하기</button>
+        <button type="button" onclick="location.href = '/forum/edit/<%= post._id %>'" class="btn btn-primary btn-edit">수정하기</button>
         <button type="button" onclick="delpost()" class="btn btn-secondary btn-delete">삭제하기</button>
     </div>
   

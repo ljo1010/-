@@ -1,53 +1,62 @@
-import React, { useRef, useEffect } from "react";
-import Chart from 'chart.js/auto';
+import React, { useState } from "react";
+import { NavLink, useParams } from "react-router-dom";
 
 function Write(props) {
-  const chartRef = useRef(null); // Canvas 엘리먼트에 대한 참조를 얻기 위한 useRef 훅 사용
+  let [modal, setModal] = useState(false);
+  let [글제목, 글제목변경] = useState([]);
+  let [따봉, 따봉변경] = useState([]); // 따봉 상태를 글제목과 같은 길이의 배열로 초기화
 
-  useEffect(() => {
-    let myChart = null; // 차트 인스턴스를 저장할 변수
+  let [title, setTitle] = useState(2);
+  let [입력값, 입력값변경] = useState('');
 
-    // 차트 생성 및 렌더링
-    const ctx = chartRef.current.getContext('2d');
-
-    // 이전 차트가 존재하는 경우 제거
-    if (myChart) {
-      myChart.destroy();
-    }
-
-    // 새로운 차트 생성
-    myChart = new Chart(ctx, {
-      type: 'bar',
-      data: {
-        labels: ['박태훈1', '박태훈2', '박태훈3', '박태훈4', '박태훈5', '박태훈6'],
-        datasets: [{
-          label: '후노바스가 이번 선거에 투표한 사람번호',
-          data: [12, 19, 3, 5, 2, 3],
-          borderWidth: 0.5
-        }]
-      },
-      options: {
-        scales: {
-          y: {
-            beginAtZero: true
-          }
-        }
-      }
-    });
-
-    // 컴포넌트가 언마운트될 때 차트 제거
-    return () => {
-      if (myChart) {
-        myChart.destroy();
-      }
-    };
-  }, []); // 컴포넌트가 마운트될 때 한 번만 실행될 useEffect 사용
+  // 글 추가 함수
+  const addPost = (title) => {
+    let copyTitles = [...글제목];
+    let copyLikes = [...따봉]; // 추천수 상태도 같은 길이로 복사
+    copyTitles.unshift(title);
+    copyLikes.unshift(0); // 새로운 글의 추천수를 0으로 초기화
+    글제목변경(copyTitles);
+    따봉변경(copyLikes);
+  };
 
   return (
     <>
-      {/* Canvas 엘리먼트 추가 */}
-      <div>
-        <canvas ref={chartRef} id="myChart"></canvas>
+      <div className='main-bg'></div>
+      <div className='container'>
+        <div className='row'>
+          {글제목.map(function (a, i) {
+            return (
+              <div className="list" key={i}>
+                <h4 onClick={() => { setModal(!modal); setTitle(i) }}>{글제목[i]}
+                  <span onClick={(e) => { e.stopPropagation(); let copy = [...따봉]; copy[i] = copy[i] + 1; 따봉변경(copy) }}>👍</span>{따봉[i]}
+                </h4>
+                <p>2월 18일 발행</p>
+                <button onClick={() => {
+                  let copy = [...글제목]
+                  copy.splice(i, 1);
+                  글제목변경(copy);
+                }}>삭제</button>
+              </div>)
+          })}
+          <input onChange={(e) => { 입력값변경(e.target.value); console.log(입력값) }} />
+          <button onClick={() => {
+            addPost(입력값); // 새로운 글 추가 시 추천수 0으로 초기화
+          }}>업로드</button>
+          {modal && <Modal title={title} 글제목={글제목} />} {/* modal 상태가 true이면 Modal 컴포넌트 렌더링 */}
+        </div>
+      </div>
+    </>
+  );
+}
+
+function Modal(props) {
+  return (
+    <>
+      <div className='modal'>
+        <h4>{props.글제목[props.title]}</h4>
+        <p>날짜</p>
+        <p>상세내용</p>
+        <button>글수정</button>
       </div>
     </>
   );

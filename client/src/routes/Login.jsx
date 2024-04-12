@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { useNavigate } from 'react-router-dom';
+import axios from "axios";
 
 const User = {
     email: 'test1234@example.com',
@@ -36,14 +37,8 @@ function Login() {
         setPwValid(regex.test(e.target.value));
     };
 
-    const onClickConfirmButton = () => {
-        if (email === User.email && pw === User.pw) {
-            alert('로그인에 성공했습니다.');
-            // 로그인 성공 시 Main 화면으로 이동
-            navigate('/main');
-        } else {
-            alert('등록되지 않은 회원입니다.');
-        }
+    const onClickConfirmButton = (username, password) => {
+        axios.post('/login', User).then(res=>{});
     }
 
     const handleCloseButton = () => {
@@ -62,6 +57,7 @@ function Login() {
                 <div className="inputWrap">
                     <input 
                         type="text"
+                        name="username"
                         className="input" 
                         placeholder="1234@gmail.com"
                         value={email} 
@@ -80,6 +76,7 @@ function Login() {
                 <div className="inputWrap">
                     <input 
                         type="password"
+                        name="password"
                         className="input"
                         placeholder="영문, 숫자, 특수문자 포함 8자 이상"
                         value={pw}

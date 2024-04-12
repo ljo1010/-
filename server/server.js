@@ -45,6 +45,11 @@ app.use(session({
 }))
 app.use(passport.session())
 
+// 프론트: 리액트와 연결
+app.get("/api", (req, res) => {
+    return res.json({ greeting: "Hello World" });
+});
+
 // CUSTOM MAGIC NUMBER
 const MAX_TITLE_LEN = 50;
 const PAGINATION_NUM = 10;
@@ -123,36 +128,37 @@ app.use((req, res, next) => {
 /* ========= Rendering page express ========= */
 
 // Render Homepage: 'http://localhost:8080/'
-app.get('/api/', (req, res) => {
-    res.redirect('/api/forum/1');
+app.get('/', (req, res) => {
+    res.redirect('/forum/1');
 });
 
-app.get('/api/register', (req, res) => {
+app.get('/register', (req, res) => {
     res.render('register.ejs');
 });
 
-app.get('/api/login', (req, res) => {
+app.get('/login', (req, res) => {
     res.render('login.ejs');
 });
 
-app.get('/api/logout', checkLogedInAndHandleError, (req, res) => {
+app.get('/logout', checkLogedInAndHandleError, (req, res) => {
     req.logout((err) => {
         if (err) { return next(err); }
-        res.redirect('/api/forum/1');
+        res.redirect('/forum/1');
     });
 });
 
-app.get('/api/mypage', checkLogedInAndHandleError, (req, res) => {
+app.get('/mypage', checkLogedInAndHandleError, (req, res) => {
     res.render('mypage.ejs', { userID : req.user.username });
 });
 
 // Render Forum page: 'http://localhost:8080/forum'
-app.get('/api/forum', async (req, res) => {
-	return res.redirect('/api/forum/1');
+app.get('/forum', async (req, res) => {
+    console.log("포럼에 접속함.");
+	return res.redirect('/forum/1');
 });
 
 // Render Forum page: 'http://localhost:8080/forum/"index"'
-app.get('/api/forum/:index', async (req, res) => {
+app.get('/forum/:index', async (req, res) => {
     const idx = req.params.index - 1;
 	let result = await collec_post
         .find()
@@ -164,7 +170,7 @@ app.get('/api/forum/:index', async (req, res) => {
 });
 
 // Render Detail of Post page: 'http://localhost:8080/"postID"'
-app.get('/api/forum/detail/:postID', async (req, res) => {
+app.get('/forum/detail/:postID', async (req, res) => {
 	try {
         let result = await collec_post.findOne({ _id : new ObjectId(req.params.postID) });
         //** Handling Clientside error
@@ -180,12 +186,12 @@ app.get('/api/forum/detail/:postID', async (req, res) => {
 });
 
 // Render Posting page: 'http://localhost:8080/posting'
-app.get('/api/posting', checkLogedInAndHandleError, (req, res) => {
+app.get('/posting', checkLogedInAndHandleError, (req, res) => {
     res.render('posting.ejs');
 });
 
 // Render Edit page: 'http://localhost:8080/edit/"postID"'
-app.get('/api/forum/edit/:postID', checkLogedInAndHandleError, async (req, res) => {
+app.get('/forum/edit/:postID', checkLogedInAndHandleError, async (req, res) => {
 	try
     {
         let result = await collec_post.findOne({ _id : new ObjectId(req.params.postID) });
@@ -208,7 +214,7 @@ app.get('/api/forum/edit/:postID', checkLogedInAndHandleError, async (req, res) 
 /* ========== API Handling express ========== */
 
 // API: POST NewPost page: 'http://localhost:8080/login'
-app.post('/api/register', async (req, res) => {
+app.post('/register', async (req, res) => {
     const { username, password, password_check } = req.body;
     console.log(req.body);
 
@@ -237,10 +243,11 @@ app.post('/api/register', async (req, res) => {
         username : username,
         password : hashedPWD,
     })
-    res.redirect('/api/forum/1');
+    res.redirect('/forum/1');
 });
 
-app.post('/api/login', (req, res, next) => {
+app.post('/login', (req, res, next) => {
+    console.log(req);
 
     //** 검증 과정 템플릿에서 받아온 거 => 클라이언트에게 보내주는 작업
     passport.authenticate('local', (error, user, info) => {
@@ -250,7 +257,7 @@ app.post('/api/login', (req, res, next) => {
         //** 실제 로그인 작업, 성공하면 =>
         req.logIn(user, (err) => {
             if (err != null) { return next(err); }
-            res.redirect('/api/forum/1');
+            res.redirect('/forum/1');
         })
 
     })(req, res, next);
@@ -258,7 +265,7 @@ app.post('/api/login', (req, res, next) => {
 });
 
 // API: POST NewPost page: 'http://localhost:8080/newpost'
-app.post('/api/newpost', checkLogedInAndHandleError, async (req, res) => {
+app.post('/newpost', checkLogedInAndHandleError, async (req, res) => {
     //**** req.body 쓰려면 app.use(express~) 내용 필수적임
     //** 제목과 내용 추출
     const { title, content } = req.body;
@@ -280,7 +287,7 @@ app.post('/api/newpost', checkLogedInAndHandleError, async (req, res) => {
             content: content
         });
 
-	    return res.redirect('/api/forum/1');
+	    return res.redirect('/forum/1');
     }
     catch (err) {
         //** Handling Serverside error
@@ -290,7 +297,7 @@ app.post('/api/newpost', checkLogedInAndHandleError, async (req, res) => {
 });
 
 // API: PUT EditPost page: 'http://localhost:8080/editpost'
-app.put('/api/editpost', checkLogedInAndHandleError, async (req, res) => {
+app.put('/editpost', checkLogedInAndHandleError, async (req, res) => {
     //** 제목, 내용, 포스트ID 추출
     const { postID, title, content } = req.body;
     console.log("Edit post: " + postID);
@@ -313,7 +320,7 @@ app.put('/api/editpost', checkLogedInAndHandleError, async (req, res) => {
 			}}
 		);
 
-	    return res.redirect('/api/forum/detail/' + postID);
+	    return res.redirect('/forum/detail/' + postID);
     }
     catch (err) {
         //** Handling Serverside error
@@ -323,7 +330,7 @@ app.put('/api/editpost', checkLogedInAndHandleError, async (req, res) => {
 });
 
 // API: DELETE and go Forum page: 'http://localhost:8080/delpost'
-app.delete('/api/delpost/:postID', checkLogedInAndHandleError, async (req, res) => {
+app.delete('/delpost/:postID', checkLogedInAndHandleError, async (req, res) => {
     console.log("Delete post: " + req.params.postID);
 
     try
@@ -362,7 +369,7 @@ function checkLogedInAndHandleError(req, res, next) {
         res.send(`
             <script>
                 alert('로그인 후 이용가능한 페이지입니다.');
-                window.location.href = '/api/login';
+                window.location.href = '/login';
             </script>
         `);
         return;
