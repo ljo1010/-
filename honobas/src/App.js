@@ -17,10 +17,10 @@ function App() {
       
       <Navbar bg="dark" variant="dark">
         <Container>
-        <Navbar.Brand href="#home">CroClo</Navbar.Brand>
+        <Navbar.Brand href="#home">CroClo🌚</Navbar.Brand>
         <Nav className="me-auto">
-          <Nav.Link onClick={()=>navigate('/')}>메인</Nav.Link>
-          <Nav.Link onClick={()=>{navigate('/Write')}}>글쓰기</Nav.Link>  
+          <Nav.Link onClick={()=>navigate('/')}>메인🏠</Nav.Link>
+          <Nav.Link onClick={()=>{navigate('/Write')}}>글쓰기📝</Nav.Link>  
         </Nav>
         <Nav>
             <Nav.Link onClick={()=>{navigate('/Login')}}>

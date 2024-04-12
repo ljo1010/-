@@ -124,6 +124,7 @@
 }
 .main-bg{
   background-color: #9e30f4;
+  background-position: center;
 }
 .modal {
   margin-top: 20px;
