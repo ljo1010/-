@@ -7,7 +7,10 @@ const methodOverride = require('method-override');
 const { MongoClient, ObjectId } = require('mongodb');
 const bcrypt = require('bcrypt');
 const MongoStore = require('connect-mongo');
-require('dotenv').config();
+// Define .env file for environment variables.
+require('dotenv').config({ path: '../.env' });
+// Define cors that help connect with react project.
+const cors = require('cors');
 
 // Define passport library for session: 'express-session & passport'
 //**** maybe we define passport library for JWT(Token) later. . .
@@ -25,6 +28,8 @@ app.use(express.json());
 app.use(express.urlencoded({extended:true}));
 //**** 클라이언트 사이드에서 action="/URL~~?_method=PUT" 같은 코드 작성 가능
 app.use(methodOverride('_method'));
+// 아래 모든 라우터 정의는 react project와 연동해서 사용 가능.
+app.use(cors());
 
 // Embedding and Initializing passport library
 app.use(passport.initialize())
@@ -59,7 +64,7 @@ new MongoClient(process.env.DB_URL).connect().then((client) => {
 	collec_post = db.collection('post');
 	collec_user = db.collection('user');
 
-	app.listen(process.env.PORT, () => {
+	app.listen(process.env.SERV_PORT, () => {
 		//** Start Server: 'http://localhost:8080'
 		console.log('http://localhost:8080 에서 서버 실행중');
 	});
@@ -118,36 +123,36 @@ app.use((req, res, next) => {
 /* ========= Rendering page express ========= */
 
 // Render Homepage: 'http://localhost:8080/'
-app.get('/', (req, res) => {
-    res.redirect('/forum/1');
+app.get('/api/', (req, res) => {
+    res.redirect('/api/forum/1');
 });
 
-app.get('/register', (req, res) => {
+app.get('/api/register', (req, res) => {
     res.render('register.ejs');
 });
 
-app.get('/login', (req, res) => {
+app.get('/api/login', (req, res) => {
     res.render('login.ejs');
 });
 
-app.get('/logout', checkLogedInAndHandleError, (req, res) => {
+app.get('/api/logout', checkLogedInAndHandleError, (req, res) => {
     req.logout((err) => {
         if (err) { return next(err); }
-        res.redirect('/forum/1');
+        res.redirect('/api/forum/1');
     });
 });
 
-app.get('/mypage', checkLogedInAndHandleError, (req, res) => {
+app.get('/api/mypage', checkLogedInAndHandleError, (req, res) => {
     res.render('mypage.ejs', { userID : req.user.username });
 });
 
 // Render Forum page: 'http://localhost:8080/forum'
-app.get('/forum', async (req, res) => {
-	return res.redirect('/forum/1');
+app.get('/api/forum', async (req, res) => {
+	return res.redirect('/api/forum/1');
 });
 
 // Render Forum page: 'http://localhost:8080/forum/"index"'
-app.get('/forum/:index', async (req, res) => {
+app.get('/api/forum/:index', async (req, res) => {
     const idx = req.params.index - 1;
 	let result = await collec_post
         .find()
@@ -159,7 +164,7 @@ app.get('/forum/:index', async (req, res) => {
 });
 
 // Render Detail of Post page: 'http://localhost:8080/"postID"'
-app.get('/forum/detail/:postID', async (req, res) => {
+app.get('/api/forum/detail/:postID', async (req, res) => {
 	try {
         let result = await collec_post.findOne({ _id : new ObjectId(req.params.postID) });
         //** Handling Clientside error
@@ -175,12 +180,12 @@ app.get('/forum/detail/:postID', async (req, res) => {
 });
 
 // Render Posting page: 'http://localhost:8080/posting'
-app.get('/posting', checkLogedInAndHandleError, (req, res) => {
+app.get('/api/posting', checkLogedInAndHandleError, (req, res) => {
     res.render('posting.ejs');
 });
 
 // Render Edit page: 'http://localhost:8080/edit/"postID"'
-app.get('/forum/edit/:postID', checkLogedInAndHandleError, async (req, res) => {
+app.get('/api/forum/edit/:postID', checkLogedInAndHandleError, async (req, res) => {
 	try
     {
         let result = await collec_post.findOne({ _id : new ObjectId(req.params.postID) });
@@ -203,7 +208,7 @@ app.get('/forum/edit/:postID', checkLogedInAndHandleError, async (req, res) => {
 /* ========== API Handling express ========== */
 
 // API: POST NewPost page: 'http://localhost:8080/login'
-app.post('/register', async (req, res) => {
+app.post('/api/register', async (req, res) => {
     const { username, password, password_check } = req.body;
     console.log(req.body);
 
@@ -232,10 +237,10 @@ app.post('/register', async (req, res) => {
         username : username,
         password : hashedPWD,
     })
-    res.redirect('/forum/1');
+    res.redirect('/api/forum/1');
 });
 
-app.post('/login', (req, res, next) => {
+app.post('/api/login', (req, res, next) => {
 
     //** 검증 과정 템플릿에서 받아온 거 => 클라이언트에게 보내주는 작업
     passport.authenticate('local', (error, user, info) => {
@@ -245,7 +250,7 @@ app.post('/login', (req, res, next) => {
         //** 실제 로그인 작업, 성공하면 =>
         req.logIn(user, (err) => {
             if (err != null) { return next(err); }
-            res.redirect('/forum/1');
+            res.redirect('/api/forum/1');
         })
 
     })(req, res, next);
@@ -253,7 +258,7 @@ app.post('/login', (req, res, next) => {
 });
 
 // API: POST NewPost page: 'http://localhost:8080/newpost'
-app.post('/newpost', checkLogedInAndHandleError, async (req, res) => {
+app.post('/api/newpost', checkLogedInAndHandleError, async (req, res) => {
     //**** req.body 쓰려면 app.use(express~) 내용 필수적임
     //** 제목과 내용 추출
     const { title, content } = req.body;
@@ -275,7 +280,7 @@ app.post('/newpost', checkLogedInAndHandleError, async (req, res) => {
             content: content
         });
 
-	    return res.redirect('/forum/1');
+	    return res.redirect('/api/forum/1');
     }
     catch (err) {
         //** Handling Serverside error
@@ -285,7 +290,7 @@ app.post('/newpost', checkLogedInAndHandleError, async (req, res) => {
 });
 
 // API: PUT EditPost page: 'http://localhost:8080/editpost'
-app.put('/editpost', checkLogedInAndHandleError, async (req, res) => {
+app.put('/api/editpost', checkLogedInAndHandleError, async (req, res) => {
     //** 제목, 내용, 포스트ID 추출
     const { postID, title, content } = req.body;
     console.log("Edit post: " + postID);
@@ -308,7 +313,7 @@ app.put('/editpost', checkLogedInAndHandleError, async (req, res) => {
 			}}
 		);
 
-	    return res.redirect('/forum/detail/' + postID);
+	    return res.redirect('/api/forum/detail/' + postID);
     }
     catch (err) {
         //** Handling Serverside error
@@ -318,7 +323,7 @@ app.put('/editpost', checkLogedInAndHandleError, async (req, res) => {
 });
 
 // API: DELETE and go Forum page: 'http://localhost:8080/delpost'
-app.delete('/delpost/:postID', checkLogedInAndHandleError, async (req, res) => {
+app.delete('/api/delpost/:postID', checkLogedInAndHandleError, async (req, res) => {
     console.log("Delete post: " + req.params.postID);
 
     try
@@ -357,10 +362,10 @@ function checkLogedInAndHandleError(req, res, next) {
         res.send(`
             <script>
                 alert('로그인 후 이용가능한 페이지입니다.');
-                window.location.href = '/login';
+                window.location.href = '/api/login';
             </script>
         `);
-        res.redirect('/login');
+        return;
     } else {
         next();
     }
