@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { useNavigate } from 'react-router-dom';
 import axios from "axios";
-import resister from "resister";
+import SignUp from "./Resister"; // SignUp 컴포넌트 import
 
 const User = {
     email: 'test1234@example.com',
@@ -45,6 +45,9 @@ function Login() {
     const handleCloseButton = () => {
         // 닫기 버튼을 눌렀을 때 Main 화면으로 이동
         navigate('/main');
+    }
+    const clickToResister = () =>{
+        navigate('/SignUp'); // SignUp으로 이동하는 버튼 클릭 시 navigate 사용
     }
 
     return (
@@ -91,13 +94,7 @@ function Login() {
                 </div>
             </div>
             <div>
-            <button 
                 
-                    className="bottomButton"
-                    onClick={onClickConfirmButton}
-                >
-                    회원가입
-                </button>
                 <button 
                     disabled={buttonDisabled} 
                     className="bottomButton"
@@ -112,7 +109,7 @@ function Login() {
                     닫기
                 </button>
             </div>
-           
+            <SignUp /> {/* SignUp 컴포넌트 추가 */}
         </div>
     );
 }

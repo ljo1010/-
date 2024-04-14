@@ -5,7 +5,7 @@ import {Formik, ErrorMessage} from "formik";
 import * as Yup from "yup";
 import {Button, TextField} from "@mui/material";
 import {useNavigate} from "react-router-dom";
-import "./signUp.scss";
+// import "./signUp.scss";
 
 const SignUp = () => {
   const navigate = useNavigate();

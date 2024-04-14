@@ -43,47 +43,6 @@ function Main(props) {
         currentValue += increment;
     }
 
-    // // 차트 생성 및 렌더링
-    // const ctx = chartRef.current.getContext('2d');
-
-    // // 이전 차트가 존재하는 경우 제거
-    // if (myChart) {
-    //   myChart.destroy();
-    // }
-
-    // // 새로운 차트 생성
-    // myChart = new Chart(ctx, {
-    //   type: 'bar',
-    //   data: {
-    //     labels: ['박태훈1', '박태훈2', '박태훈3', '박태훈4', '박태훈5', '박태훈6'],
-    //     datasets: [{
-    //       label: '후노바스가 이번 선거에 투표한 사람번호',
-    //       data: [12, 19, 3, 5, 2, 3],
-    //       borderWidth: 0.5
-    //     }]
-    //   },
-    //   options: {
-    //     scales: {
-    //       y: {
-    //         beginAtZero: true
-    //       }
-    //     }
-    //   }
-    // });
-    // 
-    // // 컴포넌트가 언마운트될 때 차트 제거
-    // return () => {
-    //   if (myChart) {
-    //     myChart.destroy();
-    //   }
-    // };
-
-    // const chartContainer = chartRef.current;
-    // if (chartContainer) {
-    //   const chart = createCirclePackingChart(chartContainer);
-    //   myChart = chart.scales.color;
-    // }
-
     const chartNode = createCirclePackingChart(initialData);
 
     // 생성된 차트 노드를 화면에 추가합니다.

@@ -1,5 +1,6 @@
-import React, { useState } from "react";
-import { NavLink, useParams } from "react-router-dom";
+// 클라이언트 측 코드
+import React, { useState, useEffect } from "react";
+import axios from "axios";
 
 function Write(props) {
   let [modal, setModal] = useState(false);
@@ -10,6 +11,8 @@ function Write(props) {
   let [titleIndex, setTitleIndex] = useState(null);
   let [입력값, 입력값변경] = useState('');
   let [내용입력값, 내용입력값변경] = useState('');
+  let [수정제목, set수정제목] = useState('');
+  let [수정내용, set수정내용] = useState('');
 
   const addPost = (title, content) => {
     let copyTitles = [...글제목];
@@ -44,6 +47,59 @@ function Write(props) {
     글내용변경(copyContent);
   };
 
+  // 좋아요 클릭 시 서버에 요청을 보내는 함수
+  const likePost = async (postId) => {
+    try {
+      // 게시글 ID를 이용하여 서버에 PUT 요청을 보냄
+      const response = await axios.put(`/like/${postId}`);
+      console.log(response.data); // 서버 응답 확인
+    } catch (error) {
+      console.error('Failed to like post:', error);
+      // 에러 처리
+    }
+  };
+
+  // 삭제 버튼 클릭 시 서버에 요청을 보내는 함수
+  const deletePost = async (postId) => {
+    try {
+      // 게시글 ID를 이용하여 서버에 DELETE 요청을 보냄
+      const response = await axios.delete(`/delpost/${postId}`);
+      console.log(response.status); // 서버 응답 확인
+      if (response.status === 204) {
+        // 성공적으로 삭제되었을 때
+        const copyTitles = [...글제목];
+        const copyContent = [...글내용];
+        copyTitles.splice(postId, 1);
+        copyContent.splice(postId, 1);
+        글제목변경(copyTitles);
+        글내용변경(copyContent);
+      }
+    } catch (error) {
+      console.error('Failed to delete post:', error);
+      // 에러 처리
+    }
+  };
+
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const response = await axios.get('/forum');
+        // 서버로부터 받은 게시글 데이터 처리
+        const { data } = response;
+        const titles = data.map(item => item.title);
+        const contents = data.map(item => item.content);
+        const likes = data.map(item => item.like);
+        글제목변경(titles);
+        글내용변경(contents);
+        따봉변경(likes);
+      } catch (error) {
+        console.error('Failed to fetch forum data:', error);
+        // 에러 처리
+      }
+    };
+    fetchData();
+  }, []); // 빈 배열을 전달하여 컴포넌트가 마운트될 때 한 번만 실행
+
   return (
     <>
       <div className='main-bg'></div>
@@ -53,23 +109,21 @@ function Write(props) {
             return (
               <div className="list" key={i}>
                 <h4 onClick={() => { setModal(true); setTitleIndex(i) }}>{글제목[i]}
-                  <span onClick={(e) => { e.stopPropagation(); let copy = [...따봉]; copy[i] = copy[i] + 1; 따봉변경(copy) }}>👍</span>{따봉[i]}
+                  <span onClick={(e) => { e.stopPropagation(); likePost(i) }}>👍</span>{따봉[i]}
                 </h4>
                 <p>{글내용[i]}</p>
                 <p>{getCurrentDateTime()} 발행</p>
                 <button onClick={() => {
-                  let copyTitle = [...글제목];
-                  let copyContent = [...글내용];
-                  copyTitle.splice(i, 1);
-                  copyContent.splice(i, 1);
-                  글제목변경(copyTitle);
-                  글내용변경(copyContent);
+                  deletePost(i);
                 }}>삭제</button>
                 <button onClick={() => {
                   // 글 수정 모달 열기
                   setModal(true);
                   setTitleIndex(i);
+                  set수정제목(글제목[i]);
+                  set수정내용(글내용[i]);
                 }}>수정</button>
+
               </div>)
           })}
           <input onChange={(e) => { 입력값변경(e.target.value); console.log(입력값) }} />
@@ -78,7 +132,17 @@ function Write(props) {
             addPost(입력값, 내용입력값);
           }}>
             업로드</button>
-          {modal && <Modal title={글제목[titleIndex]} content={글내용[titleIndex]} setModal={setModal} editPost={editPost} index={titleIndex} />}
+          {modal && 
+            <Modal 
+              title={수정제목} 
+              content={수정내용} 
+              setModal={setModal} 
+              editPost={editPost} 
+              index={titleIndex} 
+              set수정제목={set수정제목} 
+              set수정내용={set수정내용} 
+            />
+          }
         </div>
       </div>
     </>
@@ -86,9 +150,6 @@ function Write(props) {
 }
 
 function Modal(props) {
-  const [수정제목, set수정제목] = useState(props.title);
-  const [수정내용, set수정내용] = useState(props.content);
-
   return (
     <>
       <div className='modal'>
@@ -96,11 +157,11 @@ function Modal(props) {
         <p>{props.content}</p>
         <p>날짜</p>
         <p>상세내용</p>
-        <input value={수정제목} onChange={(e) => set수정제목(e.target.value)} />
-        <textarea value={수정내용} onChange={(e) => set수정내용(e.target.value)} />
+        <input value={props.title} onChange={(e) => props.set수정제목(e.target.value)} />
+        <textarea value={props.content} onChange={(e) => props.set수정내용(e.target.value)} />
         <button onClick={() => {
           // 수정된 글 정보 전달
-          props.editPost(수정제목, 수정내용, props.index);
+          props.editPost(props.title, props.content, props.index);
           props.setModal(false);
         }}>저장</button>
         <button onClick={() => props.setModal(false)}>취소</button>

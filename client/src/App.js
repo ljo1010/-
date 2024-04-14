@@ -6,10 +6,23 @@ import { Routes, Route, Link, useNavigate, Outlet} from 'react-router-dom';
 import Main from  './routes/Main.js'
 import Write from './routes/Write.js';
 import Login from './routes/Login.jsx';
+import axios from 'axios';
 
 function App() {
 
   const navigate = useNavigate();
+  
+  const handleLogout = async () => {
+    try {
+      const response = await axios.get('/logout');
+      console.log('Logout successful:', response);
+      // 로그아웃 성공 처리
+    } catch (error) {
+      console.error('Logout failed:', error);
+      // 로그아웃 실패 처리
+    }
+  };
+  
 
   return (
     <div>
@@ -23,6 +36,9 @@ function App() {
         <Nav>
           <Nav.Link className="login-link" onClick={()=>{navigate('/Login')}}>
             <Button variant="outline-light">로그인</Button>
+          </Nav.Link>
+          <Nav.Link >
+            <Button onClick={handleLogout}>로그아웃</Button>
           </Nav.Link>
         </Nav>
       </Navbar>    
