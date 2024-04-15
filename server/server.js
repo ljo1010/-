@@ -282,11 +282,13 @@ app.post('/newpost', checkLogedInAndHandleError, async (req, res) => {
     try
     {
         await collec_post.insertOne({
+            writer: req.user.username,
             title: title,
-            content: content
+            content: content,
+            like: 0
         });
 
-	    return res.redirect('/forum/1');
+        return;
     }
     catch (err) {
         //** Handling Serverside error
@@ -354,7 +356,7 @@ app.put('/like/:postID', checkLogedInAndHandleError, async (req, res) => {
         const postID = req.params.postID;
         
         // DB에서 postID에 해당하는 게시물 조회
-        const post = await collec_post.findOne({ _id: ObjectId(postID) });
+        const post = await collec_post.findOne({ _id: new ObjectId(postID) });
 
         if (!post) {
             return res.status(404).json({ error: '게시물을 찾을 수 없습니다.' });
@@ -362,9 +364,10 @@ app.put('/like/:postID', checkLogedInAndHandleError, async (req, res) => {
 
         // 게시물의 like 수를 1 증가시킴
         await collec_post.updateOne(
-            { _id: ObjectId(postID) },
+            { _id: new ObjectId(postID) },
             { $inc: { like: 1 } }
         );
+        console.log("hello, world!");
 
         res.status(200).json({ message: '게시물에 좋아요를 추가했습니다.' });
     } catch (error) {
