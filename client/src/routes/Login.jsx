@@ -1,12 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { useNavigate } from 'react-router-dom';
 import axios from "axios";
-import SignUp from "./Resister"; // SignUp 컴포넌트 import
-
-const User = {
-    email: 'test1234@example.com',
-    pw: 'test1234@@@'
-}
+import SignUp from "./Register"; // SignUp 컴포넌트 import
 
 function Login() {
     const [email, setEmail] = useState('');
@@ -38,9 +33,28 @@ function Login() {
         setPwValid(regex.test(e.target.value));
     };
 
-    const onClickConfirmButton = (username, password) => {
-        axios.post('/login', User).then(res=>{});
-    }
+    const onClickConfirmButton = () => {
+        if (emailValid && pwValid) {
+            const data = {
+                username: email,
+                password: pw
+            };
+
+            axios.post('/login', data)
+                .then((response) => {
+                    // handle success
+                    console.log(response);
+                    
+                })
+                .catch((error) => {
+                    // handle error
+                    alert(error);
+                    window.history.back();
+                });
+                
+            navigate('/main');
+        }
+    };
 
     const handleCloseButton = () => {
         // 닫기 버튼을 눌렀을 때 Main 화면으로 이동

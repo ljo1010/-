@@ -9,8 +9,6 @@ const bcrypt = require('bcrypt');
 const MongoStore = require('connect-mongo');
 // Define .env file for environment variables.
 require('dotenv').config({ path: '../.env' });
-// Define cors that help connect with react project.
-const cors = require('cors');
 
 // Define passport library for session: 'express-session & passport'
 //**** maybe we define passport library for JWT(Token) later. . .
@@ -28,8 +26,6 @@ app.use(express.json());
 app.use(express.urlencoded({extended:true}));
 //**** 클라이언트 사이드에서 action="/URL~~?_method=PUT" 같은 코드 작성 가능
 app.use(methodOverride('_method'));
-// 아래 모든 라우터 정의는 react project와 연동해서 사용 가능.
-app.use(cors());
 
 // Embedding and Initializing passport library
 app.use(passport.initialize())
@@ -77,6 +73,7 @@ new MongoClient(process.env.DB_URL).connect().then((client) => {
 }).catch((err) => {
 	console.log(err);
 });
+
 /* ========================================== */
 
 
@@ -153,8 +150,13 @@ app.get('/mypage', checkLogedInAndHandleError, (req, res) => {
 
 // Render Forum page: 'http://localhost:8080/forum'
 app.get('/forum', async (req, res) => {
-    console.log("포럼에 접속함.");
-	return res.redirect('/forum/1');
+    try {
+        const result = await collec_post.find().toArray();
+        res.json(result); // JSON 형식으로 데이터 전달
+    } catch (error) {
+        console.error('Failed to fetch forum data:', error);
+        res.status(500).json({ error: 'Failed to fetch forum data' }); // 에러 처리
+    }
 });
 
 // Render Forum page: 'http://localhost:8080/forum/"index"'
@@ -215,13 +217,14 @@ app.get('/forum/edit/:postID', checkLogedInAndHandleError, async (req, res) => {
 
 // API: POST NewPost page: 'http://localhost:8080/login'
 app.post('/register', async (req, res) => {
-    const { username, password, password_check } = req.body;
+    const { email, password } = req.body;
     console.log(req.body);
+    console.log(email);
 
-    let result = collec_user.findOne({ username : username });
+    let result = collec_user.findOne({ username : email });
 
     //** 아이디가 비어있거나 너무 긴 경우
-    if (username == '' || username.length > MAX_UID_LEN) {
+    if (email == '' || email.length > MAX_UID_LEN) {
         return showErrorAndGoBack(res, '올바른 아이디를 입력해주세요. (20자 이내)');
     }
     //** 아이디가 중복되는 경우
@@ -232,22 +235,18 @@ app.post('/register', async (req, res) => {
 	if (password == '' || password.length < MIN_UPWD_LEN) {
 		return showErrorAndGoBack(res, '유효한 비밀번호를 입력해주세요. (8자 이상)');
 	}
-    //** 비밀번호 확인이 일치하지 않은 경우
-	if (password != password_check) {
-		return showErrorAndGoBack(res, '비밀번호가 정확한지 확인해주세요.');
-	}
 
     let hashedPWD = await bcrypt.hash(password, 10);
 
     await collec_user.insertOne({
-        username : username,
+        username : email,
         password : hashedPWD,
     })
     res.redirect('/forum/1');
 });
 
 app.post('/login', (req, res, next) => {
-    console.log(req);
+    console.log(req.body.username);
 
     //** 검증 과정 템플릿에서 받아온 거 => 클라이언트에게 보내주는 작업
     passport.authenticate('local', (error, user, info) => {
@@ -346,6 +345,31 @@ app.delete('/delpost/:postID', checkLogedInAndHandleError, async (req, res) => {
         //** Handling Serverside error
         console.error('Error occurred while update post:', err);
         return res.status(500).send('게시물을 삭제하는 중에 오류가 발생했습니다.');
+    }
+});
+
+// API: PUT EditPost page: 'http://localhost:8080/editpost'
+app.put('/like/:postID', checkLogedInAndHandleError, async (req, res) => {
+    try {
+        const postID = req.params.postID;
+        
+        // DB에서 postID에 해당하는 게시물 조회
+        const post = await collec_post.findOne({ _id: ObjectId(postID) });
+
+        if (!post) {
+            return res.status(404).json({ error: '게시물을 찾을 수 없습니다.' });
+        }
+
+        // 게시물의 like 수를 1 증가시킴
+        await collec_post.updateOne(
+            { _id: ObjectId(postID) },
+            { $inc: { like: 1 } }
+        );
+
+        res.status(200).json({ message: '게시물에 좋아요를 추가했습니다.' });
+    } catch (error) {
+        console.error('Failed to like post:', error);
+        res.status(500).json({ error: '게시물에 좋아요를 추가하는 도중 오류가 발생했습니다.' });
     }
 });
 /* ========================================== */

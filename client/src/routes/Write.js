@@ -81,10 +81,8 @@ function Write(props) {
   };
 
   useEffect(() => {
-    const fetchData = async () => {
-      try {
-        const response = await axios.get('/forum');
-        // 서버로부터 받은 게시글 데이터 처리
+    axios.get('/forum')
+      .then(response => {
         const { data } = response;
         const titles = data.map(item => item.title);
         const contents = data.map(item => item.content);
@@ -92,12 +90,11 @@ function Write(props) {
         글제목변경(titles);
         글내용변경(contents);
         따봉변경(likes);
-      } catch (error) {
+      })
+      .catch(error => {
         console.error('Failed to fetch forum data:', error);
         // 에러 처리
-      }
-    };
-    fetchData();
+      });
   }, []); // 빈 배열을 전달하여 컴포넌트가 마운트될 때 한 번만 실행
 
   return (
