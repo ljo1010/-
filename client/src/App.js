@@ -5,6 +5,7 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 import { Routes, Route, Link, useNavigate, Outlet} from 'react-router-dom';
 import Main from  './routes/Main.js'
 import Write from './routes/Write.js';
+import WriteEdit from './routes/WriteEdit.js';
 import Login from './routes/Login.jsx';
 import axios from 'axios';
 
@@ -16,9 +17,11 @@ function App() {
     try {
       const response = await axios.get('/logout');
       console.log('Logout successful:', response);
+      alert("로그아웃 성공✅")
       // 로그아웃 성공 처리
     } catch (error) {
       console.error('Logout failed:', error);
+      alert("로그아웃 실패❌")
       // 로그아웃 실패 처리
     }
   };
@@ -47,6 +50,7 @@ function App() {
       <Routes>
         <Route path='/' element={<Main />} />
         <Route path='/Write' element={<Write />} />
+        <Route path='/WriteEdit' element={<WriteEdit />} />
         <Route path='/Login' element={<Login />} />
       </Routes>
     </div>

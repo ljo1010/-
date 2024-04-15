@@ -28,7 +28,7 @@ const SignUp = () => {
   const submit = async (values) => {
     const { email, password } = values;
     try {
-      await axios.post("/api/auth/signup", {
+      await axios.post("./register", {
         email,
         password,
       });
