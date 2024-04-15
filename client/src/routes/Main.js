@@ -1,6 +1,7 @@
 import React, { useRef, useEffect } from "react";
 import Chart from 'chart.js/auto';
-import createCirclePackingChart          from './createCirclePackingChart';
+import createCirclePackingChart from './createCirclePackingChart';
+
 
 
 function Main(props) {
@@ -8,13 +9,6 @@ function Main(props) {
 
   useEffect(() => {
     let myChart = null; // 차트 인스턴스를 저장할 변수
-
-    // const data = [
-    //     { id: "flare.analytics.cluster.AgglomerativeCluster", value: 3938 },
-    //     { id: "flare.analytics.cluster.CommunityStructure", value: 3812 },
-    //     { id: "flare.analytics.cluster.HierarchicalCluster", value: 6714 },
-    //     // 추가 데이터
-    //   ];
 
     const initialData = [
         { id: "flare.analytics.cluster.AgglomerativeCluster", value: 2550 },

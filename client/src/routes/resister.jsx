@@ -1,11 +1,11 @@
+import React from "react";
 import axios from "axios";
-import {toast, ToastContainer} from "react-toastify";
+import { toast, ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
-import {Formik, ErrorMessage} from "formik";
+import { Formik } from "formik";
 import * as Yup from "yup";
-import {Button, TextField} from "@mui/material";
-import {useNavigate} from "react-router-dom";
-// import "./signUp.scss";
+import { Button, TextField } from "@mui/material";
+import { useNavigate } from "react-router-dom";
 
 const SignUp = () => {
   const navigate = useNavigate();
@@ -13,14 +13,6 @@ const SignUp = () => {
     email: Yup.string()
       .email("올바른 이메일 형식이 아닙니다!")
       .required("이메일을 입력하세요!"),
-    username: Yup.string()
-      .min(2, "닉네임은 최소 2글자 이상입니다!")
-      .max(10, "닉네임은 최대 10글자입니다!")
-      .matches(
-        /^[가-힣a-zA-Z][^!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?\s]*$/,
-        "닉네임에 특수문자가 포함되면 안되고 숫자로 시작하면 안됩니다!"
-      )
-      .required("닉네임을 입력하세요!"),
     password: Yup.string()
       .min(8, "비밀번호는 최소 8자리 이상입니다")
       .max(16, "비밀번호는 최대 16자리입니다!")
@@ -34,21 +26,26 @@ const SignUp = () => {
       .required("필수 입력 값입니다!"),
   });
   const submit = async (values) => {
-    const {email, username, password} = values;
+    const { email, password } = values;
     try {
       await axios.post("/api/auth/signup", {
         email,
-        username,
         password,
       });
-      toast.success(<h3>회원가입이 완료되었습니다.<br/>로그인 하세요😎</h3>, {
-        position: "top-center",
-        autoClose: 2000
-      });
-      setTimeout(()=> {
+      toast.success(
+        <h3>
+          회원가입이 완료되었습니다.
+          <br />
+          로그인 하세요😎
+        </h3>,
+        {
+          position: "top-center",
+          autoClose: 2000,
+        }
+      );
+      setTimeout(() => {
         navigate("/login");
       }, 2000);
-
     } catch (e) {
       // 서버에서 받은 에러 메시지 출력
       toast.error(e.response.data.message + "😭", {
@@ -61,7 +58,6 @@ const SignUp = () => {
     <Formik
       initialValues={{
         email: "",
-        username: "",
         password: "",
         password2: "",
       }}
@@ -69,9 +65,9 @@ const SignUp = () => {
       onSubmit={submit}
       validateOnMount={true}
     >
-      {({values, handleSubmit, handleChange, errors}) => (
+      {({ values, handleSubmit, handleChange, errors }) => (
         <div className="signup-wrapper">
-          <ToastContainer/>
+          <ToastContainer />
           <form onSubmit={handleSubmit} autoComplete="off">
             <div className="input-forms">
               <div className="input-forms-item">
@@ -82,21 +78,7 @@ const SignUp = () => {
                   variant="outlined"
                   onChange={handleChange}
                 />
-                <div className="error-message">
-                  {errors.email}
-                </div>
-              </div>
-              <div className="input-forms-item">
-                <div className="input-label">닉네임</div>
-                <TextField
-                  value={values.username}
-                  name="username"
-                  variant="outlined"
-                  onChange={handleChange}
-                />
-                <div className="error-message">
-                  {errors.username}
-                </div>
+                <div className="error-message">{errors.email}</div>
               </div>
               <div className="input-forms-item">
                 <div className="input-label">비밀번호</div>
@@ -107,9 +89,7 @@ const SignUp = () => {
                   type="password"
                   onChange={handleChange}
                 />
-                <div className="error-message">
-                  {errors.password}
-                </div>
+                <div className="error-message">{errors.password}</div>
               </div>
               <div className="input-forms-item">
                 <div className="input-label">비밀번호 확인</div>
@@ -120,9 +100,7 @@ const SignUp = () => {
                   type="password"
                   onChange={handleChange}
                 />
-                <div className="error-message">
-                  {errors.password2}
-                </div>
+                <div className="error-message">{errors.password2}</div>
               </div>
               <Button
                 color="primary"

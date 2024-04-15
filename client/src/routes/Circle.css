@@ -1,0 +1,43 @@
+.App {
+    font-family: sans-serif;
+    text-align: center;
+}
+  
+.chart__bubble {
+    height: 100%;
+    overflow: hidden;
+    width: 100%;
+}
+.chart__bubble .bubble {
+    fill: #a4a4a477;
+}
+
+.bubble-legend {
+    visibility: hidden;
+}
+/* 원(circle) 요소에 적용되는 기본 스타일 */
+.circle {
+    stroke-width: 2px;
+    fill: steelblue;
+    stroke: white;
+    stroke-width: 2px;
+  }
+  
+  /* 첫 번째 원에 적용되는 스타일 */
+  .circle1 {
+    fill: #66c2a5; /* 채우기 색상 */
+    stroke: #3182bd; /* 테두리 색상 */
+  }
+  
+  /* 두 번째 원에 적용되는 스타일 */
+  .circle2 {
+    fill: #fc8d62; /* 채우기 색상 */
+    stroke: #e6550d; /* 테두리 색상 */
+  }
+  
+  /* 세 번째 원에 적용되는 스타일 */
+  .circle3 {
+    fill: #8da0cb; /* 채우기 색상 */
+    stroke: #4a1486; /* 테두리 색상 */
+  }
+  
