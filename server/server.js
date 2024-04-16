@@ -64,6 +64,7 @@ new MongoClient(process.env.DB_URL).connect().then((client) => {
 	db = client.db('forum');
 	collec_post = db.collection('post');
 	collec_user = db.collection('user');
+	collec_interact = db.collection('interaction');
 
 	app.listen(process.env.SERV_PORT, () => {
 		//** Start Server: 'http://localhost:8080'
@@ -297,6 +298,40 @@ app.post('/newpost', checkLogedInAndHandleError, async (req, res) => {
         console.error('Error occurred while inserting post:', err);
         return res.status(500).send('게시물을 작성하는 중에 오류가 발생했습니다.');
     }
+});
+
+app.post('/interact', checkLogedInAndHandleError, async (req, res) => {
+    //**** req.body 쓰려면 app.use(express~) 내용 필수적임
+    //** 제목과 내용 추출
+    console.log("post id " + req.body.postIDforRoute + " spent post dwell time: " + req.body.timeOnActivity);
+    // const { title, content } = req.body.timeOnActivity;
+    // console.log(req.body);
+
+    // //** 제목이 비어있거나 너무 긴 경우
+    // if (title == '' || title.length > MAX_TITLE_LEN) {
+    //     return showErrorAndGoBack(res, '제목을 입력해주세요. (50자 이내)');
+    // }
+    // //** 내용이 비어있는 경우
+	// if (content == '') {
+	// 	return showErrorAndGoBack(res, '내용을 입력해주세요.');
+	// }
+
+    // try
+    // {
+    //     await collec_post.insertOne({
+    //         writer: req.user.username,
+    //         title: title,
+    //         content: content,
+    //         like: 0
+    //     });
+
+    //     return;
+    // }
+    // catch (err) {
+    //     //** Handling Serverside error
+    //     console.error('Error occurred while inserting post:', err);
+    //     return res.status(500).send('게시물을 작성하는 중에 오류가 발생했습니다.');
+    // }
 });
 
 // API: PUT EditPost page: 'http://localhost:8080/editpost'

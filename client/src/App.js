@@ -47,7 +47,6 @@ function App() {
           <Nav.Link onClick={()=>{navigate('/Write')}}>글쓰기📝</Nav.Link>  
         </Nav>
 
-
         <Nav>
         {isLogin ? (
   <Nav.Link>

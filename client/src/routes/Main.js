@@ -46,7 +46,6 @@ function Main(props) {
 
   return (
     <>
-      {/* Canvas 엘리먼트 추가 */}
       <div id="chart-container">
         {/* <canvas ref={chartRef} id="myChart"></canvas> */}
         <div ref={chartRef}></div>

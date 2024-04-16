@@ -105,27 +105,45 @@ function Write (props) {
       <div className='container'>
         <div className='row'>
         {글제목.map(function (a, i) {
-    return (
-      <div className="list" key={i} style={{ paddingBottom: '10px' }}>
-        <h4 onClick={() => { setModal(true); setTitleIndex(i) }}>{글제목[i]}
-          <span onClick={(e) => { e.stopPropagation(); likePost(postIdList[i]) }}>👍</span>{따봉[i]}
-        </h4>
-        <p>{글내용[i]}</p>
-        <p>글쓴이: {작성자[i]}</p>
-        <Button style={{ marginRight: '10px' }} onClick={() => { deletePost(postIdList[i]) }}>삭제</Button>
-        <Button onClick={() => { setModal(true); setTitleIndex(i); set수정제목(글제목[i]); set수정내용(글내용[i]); }}>수정</Button>
-      </div>
-)
-          })}
-          <input 
+  return (
+    <div key={i} style={{ paddingBottom: '10px', borderBottom: '1px solid #2E64FE', position: 'relative' }}>
+      <h4 onClick={() => { setModal(!modal); setTitleIndex(i) }}>{글제목[i]}
+        <span onClick={(e) => { e.stopPropagation(); likePost(postIdList[i]) }}>👍</span>{따봉[i]}
+      </h4>
+      <p>{글내용[i]}</p>
+      <p>글쓴이: {작성자[i]}</p>
+      <Button style={{ marginRight: '10px' }} onClick={() => { deletePost(postIdList[i]) }}>삭제</Button>
+      <Button onClick={() => { setModal(!modal); setTitleIndex(i); set수정제목(글제목[i]); set수정내용(글내용[i]); }}>수정</Button>
+      {modal && titleIndex === i && 
+        <Modal 
+          title={글제목}
+          content={글내용}
+          writer={작성자}
+          setModal={setModal}
+          editPost={editPost}
+          index={titleIndex}
+          postId={postIdList[titleIndex]}
+        />
+      }
+    </div>
+  )
+})}
+<input 
   onChange={(e) => { 입력값변경(e.target.value); console.log(입력값) }} 
   style={{
+    marginTop: '20px',
     padding: '10px',
     borderRadius: '5px',
     border: '1px solid #ccc',
-    marginBottom: '10px'
+    marginBottom: '10px',
+    outline: 'none', // 포커스 효과 제거
   }}
+  // 포커스가 있을 때의 스타일 지정
+  onFocus={(e) => { e.target.style.borderColor = '#2E64FE'; }}
+  // 포커스가 해제될 때의 스타일 지정
+  onBlur={(e) => { e.target.style.borderColor = '#ccc'; }}
 />
+
 
 <textarea 
   onChange={(e) => { 내용입력값변경(e.target.value); console.log(내용입력값) }} 
@@ -133,32 +151,42 @@ function Write (props) {
     padding: '10px',
     borderRadius: '5px',
     border: '1px solid #ccc',
-    marginBottom: '10px'
+    marginBottom: '10px',
+    outline: 'none', // 포커스 효과 제거
   }}
+  // 포커스가 있을 때의 스타일 지정
+  onFocus={(e) => { e.target.style.borderColor = '#2E64FE'; }}
+  // 포커스가 해제될 때의 스타일 지정
+  onBlur={(e) => { e.target.style.borderColor = '#ccc'; }}
 />
 
         </div>
           <Button className="" onClick={() => { addPost(입력값, 내용입력값); }}>
             업로드
           </Button>
-          {modal && 
-            <Modal 
-              title={글제목}
-              content={글내용}
-              writer={작성자}
-              setModal={setModal}
-              editPost={editPost}
-              index={titleIndex}
-              postId={postIdList[titleIndex]}
-            />
-          }
+          
       </div>
     </>
   );
 }
 
 function Modal(props) {
-  // axios.get("/timeme").then(props.postId)
+  
+  useEffect(() => {
+    const timerInPost = "dwell-time-in-post-" + props.index;
+    TimeMe.startTimer(timerInPost);
+    return () => {
+      TimeMe.stopTimer(timerInPost);
+      let timeOnActivity = TimeMe.getTimeOnPageInSeconds(timerInPost)
+      let postIDforRoute = props.postId;
+      console.log(postIDforRoute + ": " + timeOnActivity);
+      axios.post("/interact", {
+        timeOnActivity,
+        postIDforRoute
+      })
+    };
+  }, [props.index]);
+
   return (
     <>
       <div className='custom_modal'>
@@ -166,7 +194,6 @@ function Modal(props) {
         <p>{props.content[props.index]}</p>
         <p>글쓴이: {props.writer[props.index]}</p>
       </div>
-      <a href="#" class="rounded-md bg-indigo-600 px-3.5 py-2.5 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600">Get started</a>
     </>
   );
 }
