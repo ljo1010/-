@@ -67,7 +67,7 @@ new MongoClient(process.env.DB_URL).connect().then((client) => {
 	collec_interact = db.collection('interaction');
 
 	app.listen(process.env.SERV_PORT, () => {
-		//** Start Server: 'http://localhost:8080'
+		//** Start Server: 'http://localhost:8081'
 		console.log('http://localhost:8081 에서 서버 실행중');
 	});
 
@@ -125,7 +125,7 @@ app.use((req, res, next) => {
 
 /* ========= Rendering page express ========= */
 
-// Render Homepage: 'http://localhost:8080/'
+// Render Homepage: 'http://localhost:8081/'
 app.get('/', (req, res) => {
     res.redirect('/forum/1');
 });
@@ -149,7 +149,7 @@ app.get('/mypage', checkLogedInAndHandleError, (req, res) => {
     res.render('mypage.ejs', { userID : req.user.username });
 });
 
-// Render Forum page: 'http://localhost:8080/forum'
+// Render Forum page: 'http://localhost:8081/forum'
 app.get('/forum', async (req, res) => {
     try {
         const result = await collec_post.find().toArray();
@@ -160,7 +160,7 @@ app.get('/forum', async (req, res) => {
     }
 });
 
-// Render Forum page: 'http://localhost:8080/forum/"index"'
+// Render Forum page: 'http://localhost:8081/forum/"index"'
 app.get('/forum/:index', async (req, res) => {
     const idx = req.params.index - 1;
 	let result = await collec_post
@@ -172,7 +172,7 @@ app.get('/forum/:index', async (req, res) => {
     res.render('forum.ejs', { posts : result });
 });
 
-// Render Detail of Post page: 'http://localhost:8080/"postID"'
+// Render Detail of Post page: 'http://localhost:8081/"postID"'
 app.get('/forum/detail/:postID', async (req, res) => {
 	try {
         let result = await collec_post.findOne({ _id : new ObjectId(req.params.postID) });
@@ -188,12 +188,12 @@ app.get('/forum/detail/:postID', async (req, res) => {
     }
 });
 
-// Render Posting page: 'http://localhost:8080/posting'
+// Render Posting page: 'http://localhost:8081/posting'
 app.get('/posting', checkLogedInAndHandleError, (req, res) => {
     res.render('posting.ejs');
 });
 
-// Render Edit page: 'http://localhost:8080/edit/"postID"'
+// Render Edit page: 'http://localhost:8081/edit/"postID"'
 app.get('/forum/edit/:postID', checkLogedInAndHandleError, async (req, res) => {
 	try
     {
@@ -216,7 +216,7 @@ app.get('/forum/edit/:postID', checkLogedInAndHandleError, async (req, res) => {
 
 /* ========== API Handling express ========== */
 
-// API: POST NewPost page: 'http://localhost:8080/login'
+// API: POST NewPost page: 'http://localhost:8081/login'
 app.post('/register', async (req, res) => {
     
     console.log(req.body);
@@ -266,7 +266,7 @@ app.post('/login', (req, res, next) => {
 
 });
 
-// API: POST NewPost page: 'http://localhost:8080/newpost'
+// API: POST NewPost page: 'http://localhost:8081/newpost'
 app.post('/newpost', checkLogedInAndHandleError, async (req, res) => {
     //**** req.body 쓰려면 app.use(express~) 내용 필수적임
     //** 제목과 내용 추출
@@ -334,7 +334,7 @@ app.post('/interact', checkLogedInAndHandleError, async (req, res) => {
     // }
 });
 
-// API: PUT EditPost page: 'http://localhost:8080/editpost'
+// API: PUT EditPost page: 'http://localhost:8081/editpost'
 app.put('/editpost', checkLogedInAndHandleError, async (req, res) => {
     //** 제목, 내용, 포스트ID 추출
     const { postID, title, content } = req.body;
@@ -367,7 +367,7 @@ app.put('/editpost', checkLogedInAndHandleError, async (req, res) => {
     }
 });
 
-// API: DELETE and go Forum page: 'http://localhost:8080/delpost'
+// API: DELETE and go Forum page: 'http://localhost:8081/delpost'
 app.delete('/delpost/:postID', checkLogedInAndHandleError, async (req, res) => {
     console.log("Delete post: " + req.params.postID);
 
@@ -387,7 +387,7 @@ app.delete('/delpost/:postID', checkLogedInAndHandleError, async (req, res) => {
     }
 });
 
-// API: PUT EditPost page: 'http://localhost:8080/editpost'
+// API: PUT EditPost page: 'http://localhost:8081/editpost'
 app.put('/like/:postID', checkLogedInAndHandleError, async (req, res) => {
     try {
         const postID = req.params.postID;
