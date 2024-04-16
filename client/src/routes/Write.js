@@ -1,8 +1,15 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
+import TimeMe from "timeme.js";
 import { Button } from 'react-bootstrap';
 
 function Write (props) {
+  
+  TimeMe.initialize({
+    currentPageName: "my-home-page", // current page
+    idleTimeoutInSeconds: 30 // seconds
+  });
+
   let [modal, setModal] = useState(false);
   let [글제목, 글제목변경] = useState([]);
   let [글내용, 글내용변경] = useState([]);
@@ -159,6 +166,7 @@ function Modal(props) {
         <p>{props.content[props.index]}</p>
         <p>글쓴이: {props.writer[props.index]}</p>
       </div>
+      <a href="#" class="rounded-md bg-indigo-600 px-3.5 py-2.5 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600">Get started</a>
     </>
   );
 }

@@ -28,7 +28,7 @@ app.use(express.urlencoded({extended:true}));
 app.use(methodOverride('_method'));
 
 // Embedding and Initializing passport library
-app.use(passport.initialize())
+app.use(passport.initialize());
 app.use(session({
   secret: process.env.HASH_SALT,
   resave : false,
