@@ -67,7 +67,7 @@ new MongoClient(process.env.DB_URL).connect().then((client) => {
 
 	app.listen(process.env.SERV_PORT, () => {
 		//** Start Server: 'http://localhost:8080'
-		console.log('http://localhost:8080 에서 서버 실행중');
+		console.log('http://localhost:8081 에서 서버 실행중');
 	});
 
 }).catch((err) => {
@@ -217,6 +217,8 @@ app.get('/forum/edit/:postID', checkLogedInAndHandleError, async (req, res) => {
 
 // API: POST NewPost page: 'http://localhost:8080/login'
 app.post('/register', async (req, res) => {
+    
+    console.log(req.body);
     const { email, password } = req.body;
     console.log(req.body);
     console.log(email);
