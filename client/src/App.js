@@ -51,7 +51,7 @@ function App() {
         <Nav>
         {isLogin ? (
   <Nav.Link>
-    <Button onClick={handleLogout}>로그인</Button>
+    <Button onClick={handleLogout} className="text-3xl font-bold underline">로그인</Button>
   </Nav.Link>
 ) : (
   <Nav.Link className="login-link" onClick={()=>{navigate('/Login')}}>

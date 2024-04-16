@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import axios from "axios";
 import { Button } from 'react-bootstrap';
 
-function Write(props) {
+function Write (props) {
   let [modal, setModal] = useState(false);
   let [글제목, 글제목변경] = useState([]);
   let [글내용, 글내용변경] = useState([]);
@@ -15,17 +15,6 @@ function Write(props) {
   let [내용입력값, 내용입력값변경] = useState('');
   let [수정제목, set수정제목] = useState('');
   let [수정내용, set수정내용] = useState('');
-
-  // 현재 날짜와 시간을 표시하는 함수
-  const getCurrentDateTime = () => {
-    const now = new Date();
-    const year = now.getFullYear();
-    const month = now.getMonth() + 1;
-    const day = now.getDate();
-    const hours = now.getHours();
-    const minutes = now.getMinutes();
-    return `${year}년 ${month}월 ${day}일 ${hours}시 ${minutes}분`;
-  };
 
   const addPost = (title, content) => {
     axios.post("/newpost", {
@@ -141,36 +130,34 @@ function Write(props) {
   }}
 />
 
+        </div>
           <Button className="" onClick={() => { addPost(입력값, 내용입력값); }}>
             업로드
           </Button>
           {modal && 
             <Modal 
-              title={수정제목}
-              content={수정내용}
+              title={글제목}
+              content={글내용}
+              writer={작성자}
               setModal={setModal}
               editPost={editPost}
               index={titleIndex}
               postId={postIdList[titleIndex]}
-              set수정제목={set수정제목}
-              set수정내용={set수정내용}
             />
           }
-        </div>
       </div>
     </>
   );
 }
 
 function Modal(props) {
+  // axios.get("/timeme").then(props.postId)
   return (
     <>
-      <div className='modal'>
-        <h4>{props.title}</h4>
-        <p>{props.content}</p>
-        <p>글쓴이: {props.writer}</p>
-        <Button onClick={() => { props.editPost(props.title, props.content, props.postId); props.setModal(false); }}>저장</Button>
-        <Button onClick={() => props.setModal(false)}>취소</Button>
+      <div className='custom_modal'>
+        <h4>{props.title[props.index]}</h4>
+        <p>{props.content[props.index]}</p>
+        <p>글쓴이: {props.writer[props.index]}</p>
       </div>
     </>
   );
